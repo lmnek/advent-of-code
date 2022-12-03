@@ -1,5 +1,3 @@
-package hard
-
 enum class Shape(val score: Int) {
     ROCK(1), PAPER(2), SCISSORS(3);
 
@@ -29,19 +27,16 @@ object Factory{
     }
 }
 
-// harder
-fun main(){
-    val lines = generateSequence { readLine() }
-    var score = 0
-    lines.forEach {
-        val (a, me) = it.split(" ")
-        val enemy = Factory.getShape(a)
-        score += when(me){
-            "X" -> 0 + enemy.losingShape().score // lose
-            "Y" -> 3 + enemy.score // draw
-            "Z" -> 6 + enemy.winningShape().score // win
-            else -> throw Error()
-        }
+val lines = generateSequence { readLine() }
+var score = 0
+lines.forEach {
+    val (a, me) = it.split(" ")
+    val enemy = Factory.getShape(a)
+    score += when(me){
+        "X" -> 0 + enemy.losingShape().score // lose
+        "Y" -> 3 + enemy.score // draw
+        "Z" -> 6 + enemy.winningShape().score // win
+        else -> throw Error()
     }
-    println(score)
 }
+println(score)
