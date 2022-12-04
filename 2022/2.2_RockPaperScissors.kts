@@ -1,3 +1,4 @@
+//https://adventofcode.com/2022/day/2
 enum class Shape(val score: Int) {
     ROCK(1), PAPER(2), SCISSORS(3);
 

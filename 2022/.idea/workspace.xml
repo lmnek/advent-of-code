@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="de2067ac-5ea7-4121-b873-4c7fa362537c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/4_Camp.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/2022.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_Callories.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_Callories.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2.1_RockPaperScissors.kts" beforeDir="false" afterPath="$PROJECT_DIR$/2.1_RockPaperScissors.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2.2_RockPaperScissors.kts" beforeDir="false" afterPath="$PROJECT_DIR$/2.2_RockPaperScissors.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_Rucksack.kts" beforeDir="false" afterPath="$PROJECT_DIR$/3_Rucksack.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input_long/1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input_long/2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input_long/3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input_short/1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input_short/2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input_short/3.txt" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/3_Rucksack.kts" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2IPGWdIlEuHKKTiWN0UpXSpxeFq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="kotlin" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/4_Camp.kts" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.12004802" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunManager" selected="Kotlin script.4_Camp.kts">
+    <configuration name="3.2_RockPaperScissors.kts" type="KotlinStandaloneScriptRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="2022" />
+      <option name="filePath" value="$PROJECT_DIR$/3.2_RockPaperScissors.kts" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="4_Camp.kts" type="KotlinStandaloneScriptRunConfigurationType" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="corretto-15 (WSL)" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <module name="2022" />
+      <shortenClasspath name="NONE" />
+      <option name="filePath" value="$PROJECT_DIR$/4_Camp.kts" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unnamed" type="KotlinStandaloneScriptRunConfigurationType" nameIsGenerated="true">
+      <module name="2022" />
+      <shortenClasspath name="NONE" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="filePath" value="\\wsl$\Ubuntu-20.04\home\lemonek\repos\advent-of-code\2022\3.1_Rucksack.kts" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="\\wsl$\Ubuntu-20.04\home\lemonek\repos\advent-of-code\2022\4_Camp.kts" type="KotlinStandaloneScriptRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="2022" />
+      <shortenClasspath name="NONE" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="filePath" value="\\wsl$\Ubuntu-20.04\home\lemonek\repos\advent-of-code\2022\4_Camp.kts" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Kotlin script.Unnamed" />
+      <item itemvalue="Kotlin script.4_Camp.kts" />
+      <item itemvalue="Kotlin script.3.2_RockPaperScissors.kts" />
+      <item itemvalue="Kotlin script.\\wsl$\Ubuntu-20.04\home\lemonek\repos\advent-of-code\2022\4_Camp.kts" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Kotlin script.\\wsl$\Ubuntu-20.04\home\lemonek\repos\advent-of-code\2022\4_Camp.kts" />
+        <item itemvalue="Kotlin script.3.2_RockPaperScissors.kts" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="de2067ac-5ea7-4121-b873-4c7fa362537c" name="Changes" comment="" />
+      <created>1670075840566</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1670075840566</updated>
+      <workItem from="1670075843996" duration="792000" />
+      <workItem from="1670097932573" duration="844000" />
+      <workItem from="1670144923672" duration="1478000" />
+      <workItem from="1670146926231" duration="1613000" />
+      <workItem from="1670148571090" duration="786000" />
+      <workItem from="1670149384470" duration="130000" />
+      <workItem from="1670149545589" duration="49000" />
+      <workItem from="1670149612598" duration="1218000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
