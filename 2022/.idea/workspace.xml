@@ -5,23 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de2067ac-5ea7-4121-b873-4c7fa362537c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/4_Camp.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/2022.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_Callories.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_Callories.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2.1_RockPaperScissors.kts" beforeDir="false" afterPath="$PROJECT_DIR$/2.1_RockPaperScissors.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2.2_RockPaperScissors.kts" beforeDir="false" afterPath="$PROJECT_DIR$/2.2_RockPaperScissors.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/3_Rucksack.kts" beforeDir="false" afterPath="$PROJECT_DIR$/3_Rucksack.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_long/1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_long/2.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_long/3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_short/1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_short/2.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_short/3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/4_Camp.kts" beforeDir="false" afterPath="$PROJECT_DIR$/4_Camp.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +118,9 @@
       <workItem from="1670148571090" duration="786000" />
       <workItem from="1670149384470" duration="130000" />
       <workItem from="1670149545589" duration="49000" />
-      <workItem from="1670149612598" duration="1218000" />
+      <workItem from="1670149612598" duration="1437000" />
+      <workItem from="1670159507593" duration="65000" />
+      <workItem from="1670175475603" duration="2481000" />
     </task>
     <servers />
   </component>
