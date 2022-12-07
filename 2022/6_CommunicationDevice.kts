@@ -5,7 +5,7 @@ val buffer = arrayOfNulls<Char>(bufferLength)
 var counter = 0
 for(char in readLine()!!){
     buffer[counter % bufferLength] = char
-    if(counter >= bufferLength - 1 && buffer.distinct().size == bufferLength)
+    if(counter >= bufferLength - 1 && buffer.set().size == bufferLength)
         break
     counter+=1
 }
