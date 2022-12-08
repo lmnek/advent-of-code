@@ -90,4 +90,3 @@ fun getViewScore2(y: Int, x: Int): Int{
     }
     return d1 * d2 * d3 * d4
 }
-
