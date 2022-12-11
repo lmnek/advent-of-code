@@ -3,13 +3,12 @@ val commands = generateSequence(::readLine).map { Pair(it.substringBefore(" "), 
 var xRegister =  1
 val frameBuffer = List(6) { MutableList(40) { false } }
 val cmdIter = commands.iterator()
-val sampleCycles = listOf(20, 60, 100, 140, 180, 220)
 var signalStrength = 0
 var addxNum: Int? = null
 var addxRunning = false
 
 for(cycle in 0 until 240){
-    if ((cycle + 1) in sampleCycles) signalStrength += (cycle + 1) * xRegister
+    if ((cycle + 1) % 40 == 20) signalStrength += (cycle + 1) * xRegister
 
     if(addxNum == null && cmdIter.hasNext()){
         val cmd = cmdIter.next()
@@ -21,8 +20,7 @@ for(cycle in 0 until 240){
 
     val row: Int = cycle / 40
     val col = cycle % 40
-    frameBuffer[row][col] = xRegister == col || xRegister - 1 == col || xRegister + 1 == col
-//    println("i: $cycle, row: $row,col: $col; X: $X")
+    frameBuffer[row][col] = col in xRegister - 1.. xRegister + 1
 
     if(addxNum != null) {
         if(!addxRunning){
