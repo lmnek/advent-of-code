@@ -1,3 +1,4 @@
+//https://adventofcode.com/2022/day/10
 val commands = generateSequence(::readLine).map { Pair(it.substringBefore(" "), it.substringAfter(" ")) }.toList()
 
 var xRegister =  1
