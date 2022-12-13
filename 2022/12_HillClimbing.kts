@@ -1,48 +1,38 @@
 // https://adventofcode.com/2022/day/12
-import kotlin.system.exitProcess
 
-data class Node(var value: Char, val y: Int, val x: Int){
-    val isEnd = value == 'E'
-    init { if(isEnd) value = 'z'; if(value == 'S') value = 'a' }
+enum class NodeType { START, END, NORMAL }
+
+data class QueueEntry(val node: Node, val visitedStep: Int)
+
+class Node(char: Char, private val y: Int, private val x: Int){
+    val type = when(char) { 'E' -> NodeType.END; 'S' -> NodeType.START; else -> NodeType.NORMAL }
+    val height = when(type) { NodeType.END -> 'z'; NodeType.START -> 'a'; else -> char}.code - 'a'.code
+
+    companion object { private val DIRECTIONS = listOf(Pair(0, 1), Pair(1, 0), Pair(0, -1), Pair(-1, 0)) } // static attribute
+
+    fun adjacentNodes() = DIRECTIONS
+        .map { (incY, incX) -> Pair(y + incY, x + incX) }
+        .filter { (y, x) -> x >= 0 && y >= 0 && y < map.size && x < map[0].size }
+        .map { (y, x) -> map[y][x] }
 }
 
-data queueEntry(val Node, val visitedStep: Int)
+val map = generateSequence(::readLine).mapIndexed { y, line -> line.mapIndexed { x, c -> Node(c, y, x) } }.toList()
+println("Part1: ${bfs(map.flatten().first { it.type == NodeType.START })}")
+println("Part2: ${map.flatten().filter { it.height == 0 }.mapNotNull { bfs(it) }.min()}")
 
-//val map = buildList<List<Node>> { readln().map(::Node).toList() }
-var start: Node? = null
-val map = generateSequence(::readLine).mapIndexed { y, line -> line.mapIndexed { x, c ->
-        val node = Node(c, y, x)
-        if(c == 'S') start = node
-        node
-    }
-}.toList()
-
-start!!.visitedStep = 0
-val queue: ArrayDeque<Node> = ArrayDeque(0)
-queue.addLast(start!!)
-
-while(!queue.isEmpty()){
-    val node = queue.removeFirst()
-    tryNeighbor(node, 1, 0)
-    tryNeighbor(node, 0, 1)
-    tryNeighbor(node, -1, 0)
-    tryNeighbor(node, 0, -1)
-}
-
-fun tryNeighbor(node: Node, incX: Int, incY: Int) {
-    val y = node.y + incY
-    val x = node.x + incX
-    // in map?
-    if(x >= 0 && y >= 0 && y < map.size && x < map[0].size){
-        val neighbor = map[y][x]
-        // not visited and can go up to?
-        if(neighbor.visitedStep == -1 && neighbor.value.code - node.value.code <= 1){
-            if(neighbor.isEnd){
-                println("END: ${node.visitedStep + 1}")
-                exitProcess(0)
+fun bfs(startNode: Node): Int?{
+    val visitedNodes = mutableSetOf(startNode)
+    val queue: ArrayDeque<QueueEntry> = ArrayDeque<QueueEntry>().apply { add(QueueEntry(startNode, 0)) }
+    while(!queue.isEmpty()){
+        val entry = queue.removeFirst()
+        entry.node.adjacentNodes()
+            .filter { it.height - entry.node.height <= 1 }
+            .filter { it !in visitedNodes }
+            .forEach {
+                if(it.type == NodeType.END) return entry.visitedStep + 1 // found the end
+                visitedNodes.add(it)
+                queue.addLast(QueueEntry(it, entry.visitedStep + 1))
             }
-            neighbor.visitedStep = node.visitedStep + 1
-            queue.addLast(neighbor)
-        }
     }
+    return null // cant reach the end
 }
