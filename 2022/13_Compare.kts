@@ -12,41 +12,28 @@ fun part1(components: List<Component>): Int = components
     .sum()
 
 fun part2(components: List<Component>): Int{
-    val dividers = arrayListOf("[[2]]".toComponent(), "[[6]]".toComponent())
-    val newComponents = components.toMutableList()
-    newComponents.addAll(dividers)
-    newComponents.sort()
-    return (newComponents.indexOf(dividers[0]) + 1) * (newComponents.indexOf(dividers[1]) + 1)
+    val dividers = listOf("[[2]]".toComponent(), "[[6]]".toComponent())
+    val sortedComponents = (components + dividers).sorted()
+    return (sortedComponents.indexOf(dividers[0]) + 1) * (sortedComponents.indexOf(dividers[1]) + 1)
 }
 
 // composite design pattern + comparable interface
-sealed interface Component : Comparable<Component>{
-    override fun compareTo(other: Component): Int
-}
+sealed interface Component : Comparable<Component>
 
-class Composite(private val components: List<Component>) : Component {
+private class Composite(private val components: List<Component>) : Component {
     override fun compareTo(other: Component): Int {
         return when (other) {
             is Number -> this.compareTo(Composite(listOf(other)))
-            is Composite -> {
-                var result: Int?
-                val iter1 = this.components.iterator()
-                val iter2 = other.components.iterator()
-                while (iter1.hasNext() && iter2.hasNext()) {
-                    result = iter1.next().compareTo(iter2.next())
-                    if (result != 0) return result
-                }
-                if (!iter1.hasNext() && !iter2.hasNext()) 0
-                else if (iter1.hasNext()) 1
-                else if (iter2.hasNext()) -1
-                else throw Error()
-            }
+            is Composite -> components
+                .zip(other.components)
+                .map { it.first.compareTo(it.second) }
+                .firstOrNull { it != 0 } ?: components.size.compareTo(other.components.size)
             else -> throw Error()
         }
     }
 }
 
-class Number(private val value: Int) : Component {
+private class Number(private val value: Int) : Component {
     override fun compareTo(other: Component): Int = when(other) {
         is Number -> value.compareTo(other.value)
         is Composite -> Composite(listOf(this)).compareTo(other)
@@ -55,6 +42,7 @@ class Number(private val value: Int) : Component {
 }
 
 // input parser
+// better parsing with regex -> https://todd.ginsberg.com/post/advent-of-code/2022/day13/
 fun String.toComponent(): Component {
     val str = (if(startsWith(',')) substring(1) else this).trim()
     return if(str == "[]") Composite(listOf())
