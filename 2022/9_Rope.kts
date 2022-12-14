@@ -34,7 +34,7 @@ fun compute(knotCount: Int): Int {
 
 data class Point(var x: Int, var y: Int){
     infix fun adjacentTo(other: Point) = other.x in x-1..x+1 && other.y in y-1..y+1
-    fun getVectorTo(other: Point): Point =Point((other.x - x).sign, (other.y - y).sign)
+    fun getVectorTo(other: Point): Point = Point((other.x - x).sign, (other.y - y).sign)
     operator fun plus(other: Point) = Point(x + other.x, y + other.y)
     override fun toString() = "(x=$x, y=$y)"
 }
