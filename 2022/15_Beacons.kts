@@ -11,31 +11,34 @@ fun part1(result_y: Int = 2_000_000) = positions.mapNotNull { (sensor, beacon) -
     if(yDiff  >= 0) (sensor.x - yDiff)..(sensor.x + yDiff) else null
 }.merge().sumOf { it.last - it.first }
 
-// idea from https://www.youtube.com/watch?v=w7m48_uCvWI
-fun part2(): Int {
-    // intersection of the two lines is the distress beacon
-    linesBetween { sensor: Pos -> sensor.x - sensor.y }.distinct().forEach { posLine ->
-        linesBetween { sensor: Pos -> sensor.x + sensor.y }.distinct().forEach { negLine ->
-            val x = (posLine + negLine) / 2
-            val y = (negLine - posLine) / 2
-            println("$x, $y")
-            return (4000000 * x) + y
-        }
-    }
-    throw Error()
-}
 
-fun linesBetween(getLine: (Pos) -> Int) = sequence {
-    val down = mutableListOf<Int>(); val up = mutableListOf<Int>()
+// idea from https://www.youtube.com/watch?v=w7m48_uCvWI
+// https://www.reddit.com/r/adventofcode/comments/zmcn64/2022_day_15_solutions/?sort=confidence
+fun part2(): Long {
+    val bounds = 0..20
+    // lines: y = x + a, y = -x + b
+    val aCoefficients = mutableListOf<Int>(); val bCoefficients = mutableListOf<Int>()
     positions.forEach { (sensor, beacon) ->
         val d = manhattanDistance(sensor, beacon)
-        down.add(getLine(sensor) - d); up.add(getLine(sensor) + d)
+        aCoefficients.add(sensor.x - sensor.y - d - 1); aCoefficients.add(sensor.x - sensor.y + d + 1)
+        bCoefficients.add(sensor.x + sensor.y - d - 1); bCoefficients.add(sensor.x + sensor.y + d + 1)
     }
+//    aCoefficients.forEach { a -> bCoefficients
+//        .map { b -> Pos((b - a) / 2, (a + b) / 2) }
+//        .filter { pos ->  pos.x in bounds && pos.y in bounds }
+//        .filter { pos -> positions.all { (sensor, beacon) -> manhattanDistance(sensor, pos) > manhattanDistance(sensor, beacon) } }
+//        .forEach { println(it) }
+//    }
 
-    down.forEachIndexed { i, d -> up.forEachIndexed { j, u ->
-        if(i != j && abs(d - u) == 2)
-            yield(d + 1)
-    } }
+    val beaconPos = aCoefficients.flatMap { a -> bCoefficients
+        .map { b -> Pos((b - a) / 2, (a + b) / 2) }
+        .filter { pos ->  pos.x in bounds && pos.y in bounds }
+        .filter { pos -> positions.all { (sensor, beacon) -> manhattanDistance(sensor, pos) > manhattanDistance(sensor, beacon) } }
+        .distinct()
+    }.single()
+
+//    println("${beaconPos.x}, ${beaconPos.y}")
+    return (4_000_000L * beaconPos.x) + beaconPos.y
 }
 
 fun manhattanDistance(a: Pos, b: Pos) = abs(a.x - b.x) + abs(a.y - b.y)
