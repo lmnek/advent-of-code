@@ -22,7 +22,7 @@ doProblem input parseData solve idx = do
 -- Parsing
 
 data Cube = Blue | Red | Green deriving (Show, Eq)
-data Cubes = Cubes Int Cube deriving (Show, Eq)
+data Cubes = Cubes { took :: Int, cube :: Cube } deriving (Show, Eq)
 type Set = [Cubes]
 data Game = Game Int [Set] deriving Show
 
@@ -68,9 +68,7 @@ inBag :: Cubes -> Bool
 inBag (Cubes took cube) = countInBag cube >= took
 
 countInBag :: Cube -> Int
-countInBag cube = maybe 0 (\(Cubes count _) -> count) cubesInBag 
-    where cubesInBag = find (\(Cubes count cube') -> cube == cube') bag
-
+countInBag cubeType = maybe 0 took $ find ((== cubeType) . cube) bag 
 
 solve2 :: [String] -> Int
 solve2 a = 2
