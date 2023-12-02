@@ -1,6 +1,7 @@
 import Text.Parsec
 import Text.Parsec.String (Parser)
 import Data.List (find)
+import Data.List.Extra (groupOn, sortOn)
 
 
 main :: IO() 
@@ -8,23 +9,24 @@ main = do
     fileName <- getLine
     contents <- readFile $ "data/"++fileName
     doProblem contents parseGames solve1 1
+    doProblem contents parseGames solve2 2
 
 doProblem :: Show b => String -> Parser a -> (a -> b) -> Int -> IO()
 doProblem input parseData solve idx = do
-    let res = parse parseData "" input 
-    case res of
-        Left err -> putStrLn $ "Parsing error: " ++ show err
-        Right parsedData -> putStrLn $ show idx ++ ": " ++ solution 
-            where solution = show $ solve parsedData
+    let str = case parse parseData "" input  of
+            Left err -> "Parsing error: " ++ show err
+            Right parsedData -> show idx ++ ": " ++ solution 
+                where solution = show $ solve parsedData
+    putStrLn str
 
 ---------------------
 
 -- Parsing
 
-data Cube = Blue | Red | Green deriving (Show, Eq)
+data Cube = Blue | Red | Green deriving (Show, Eq, Ord)
 data Cubes = Cubes { took :: Int, cube :: Cube } deriving (Show, Eq)
 type Set = [Cubes]
-data Game = Game Int [Set] deriving Show
+data Game = Game { index :: Int, sets :: [Set] } deriving Show
 
 parseInt = read <$> many1 digit 
 
@@ -70,5 +72,20 @@ inBag (Cubes took cube) = countInBag cube >= took
 countInBag :: Cube -> Int
 countInBag cubeType = maybe 0 took $ find ((== cubeType) . cube) bag 
 
-solve2 :: [String] -> Int
-solve2 a = 2
+-- ----------------------
+
+-- note: groupOn func = groupBy ((==) `on` func)
+
+solve2 :: [Game] -> Int
+solve2 = sum . map power
+
+power :: Game -> Int
+power = product . (map minCubes) . group . sets
+
+minCubes :: [Cubes] -> Int
+minCubes = maximum . map took
+
+group :: [Set] -> [[Cubes]]
+group = groupOn cube . sortOn cube . concat
+
+
