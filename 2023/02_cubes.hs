@@ -8,8 +8,9 @@ main :: IO()
 main = do
     fileName <- getLine
     contents <- readFile $ "data/"++fileName
-    doProblem contents parseGames solve1 1
-    doProblem contents parseGames solve2 2
+    doProblem contents parseInput solve1 1
+    doProblem contents parseInput solve2 2
+    doProblem contents parseInput solve2short 2
 
 doProblem :: Show b => String -> Parser a -> (a -> b) -> Int -> IO()
 doProblem input parseData solve idx = do
@@ -50,7 +51,7 @@ parseGame = do
     sets <- parseSet `sepBy` (string "; ")
     return $ Game gameIdx sets
 
-parseGames = parseGame `endBy` (char '\n')
+parseInput = parseGame `endBy` (char '\n')
 
 -- ------------
 
@@ -75,6 +76,8 @@ countInBag cubeType = maybe 0 took $ find ((== cubeType) . cube) bag
 -- ----------------------
 
 -- note: groupOn func = groupBy ((==) `on` func)
+
+solve2short = sum . map (product . (map (maximum . map took)) . (groupOn cube . sortOn cube . concat) . sets)  
 
 solve2 :: [Game] -> Int
 solve2 = sum . map power
