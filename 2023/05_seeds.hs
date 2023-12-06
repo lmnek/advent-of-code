@@ -1,0 +1,82 @@
+import Text.Parsec
+import Text.Parsec.String (Parser)
+import Data.List (find)
+import Data.List.Extra (chunksOf)
+
+main :: IO() 
+main = do
+    fileName <- getLine
+    input <- readFile $ "data/"++fileName
+    doProblem input parseInput1 solve1 1
+    doProblem input parseInput2 solve2 2
+
+doProblem :: Show b => String -> Parser a -> (a -> b) -> Int -> IO()
+doProblem input parseData solve idx = do
+    let str = case parse parseData "" input  of
+            Left err -> "Parsing error: " ++ show err
+            Right parsedData -> show idx ++ ": " ++ solution 
+                where solution = show $ solve parsedData
+    putStrLn str
+
+-- DATA TYPES / CLASSES --------------
+
+data Range = R Int Int Int deriving Show
+data SeedRange = SR Int Int
+
+-- PARSING ----------------------------
+
+number = read <$> many1 digit
+
+parseSeeds :: Parser [Int]
+parseSeeds = string "seeds: " >> number `sepBy` char ' ' <* endOfLine
+
+parseRange = do
+    destinationStart <- number
+    char ' '
+    sourceStart <- number
+    char ' '
+    rangeLength <- number
+    endOfLine
+    return $ R destinationStart sourceStart rangeLength
+
+parseMap = do
+    source <- many1 letter 
+    string "-to-"
+    destination <- many1 letter
+    string " map:\n"
+    ranges <- many1 parseRange
+    endOfLine
+    return $ transform ranges 
+
+parseInput1 = do
+    seeds <- parseSeeds
+    endOfLine
+    transformations <- many1 parseMap 
+    return (seeds, transformations)
+
+parseInput2 = do
+    (seeds, transformations) <- parseInput1
+    let seedRanges = map (\sr -> SR (sr!!0) (sr!!1)) $ chunksOf 2 seeds
+    return (seedRanges, transformations)
+
+-- SOLUTION 1 -------------------------
+
+solve1 :: ([Int], [(Int -> Int)]) -> Int
+solve1 (seeds, maps) = minimum $ map getLocation seeds
+    where getLocation seed = foldl (\prev mapTrans -> mapTrans prev) seed maps
+
+transform :: [Range] -> Int -> Int
+transform rs src = case find isForSrc rs of
+        Nothing -> src
+        Just (R d s _) -> d + (src - s)
+    where isForSrc (R _ s len) = src >= s && src < s + len 
+    
+
+-- SOLUTION 2 -------------------------
+
+-- TODO: brute-force too slow
+solve2 :: ([SeedRange], [(Int -> Int)]) -> Int
+solve2 (seedRanges, maps) = solve1 (seeds, maps)
+    where allSeeds (SR str len) = [str..str+len-1] 
+          seeds = concat $ map allSeeds seedRanges
+
