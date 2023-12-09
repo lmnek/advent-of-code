@@ -9,7 +9,7 @@ inputFiles2 = [ "8_1c", "8_2"]
 main :: IO() 
 main = do 
     forM_ inputFiles1 $ doProblemsOnFile $ doProblem parseInput1 solve1 1 
-    forM_ inputFiles2 $ doProblemsOnFile $ doProblem parseInput1 solve2 2
+--    forM_ inputFiles2 $ doProblemsOnFile $ doProblem parseInput1 solve2 2
 
 doProblemsOnFile doFunc fileName = do
     input <- readFile $ "data/"++fileName
@@ -69,8 +69,8 @@ solve1 (inss, nodeMap) = recursiveFoldl "AAA"
 -- SOLUTION 2 -------------------------
 
 -- TODO: .... LCM cycle detection
-solve2 :: (String, NodeMap) -> Int
-solve2 a = 2
+--solve2 :: (String, NodeMap) -> Int
+--solve2 a = 2
 
 
 -- UTILS ------------------------------
