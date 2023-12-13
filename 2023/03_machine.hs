@@ -1,23 +1,17 @@
+import AOCUtils (run)
 import Text.Parsec
 import Text.Parsec.String (Parser)
+
 import Control.Applicative (some)
 import Data.Char (isSymbol, isPunctuation)
 import Data.List (find)
 
-main :: IO() 
-main = do
-    fileName <- getLine
-    input <- readFile $ "data/"++fileName
-    doProblem input parseInput solve1 1
-    doProblem input parseInput solve2 2
+inputFiles = [ "3_1" , "3_2" ]
 
-doProblem :: Show b => String -> Parser a -> (a -> b) -> Int -> IO()
-doProblem input parseData solve idx = do
-    let str = case parse parseData "" input  of
-            Left err -> "Parsing error: " ++ show err
-            Right parsedData -> show idx ++ ": " ++ solution 
-                where solution = show $ solve parsedData
-    putStrLn str
+main :: IO() 
+main = do 
+    run inputFiles parseInput solve1 1 
+    run inputFiles parseInput solve2 2 
 
 -- DATA TYPES / CLASSES --------------
 

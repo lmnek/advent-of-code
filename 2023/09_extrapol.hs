@@ -1,27 +1,14 @@
+import AOCUtils (run)
 import Text.Parsec
 import Text.Parsec.String (Parser)
-import Control.Monad (forM_)
 import Data.List.Extra (chunksOf)
 
-inputFiles1 = [ "9_1" , "9_2" ]
-inputFiles2 = inputFiles1
+inputFiles = [ "9_1" , "9_2" ]
 
 main :: IO() 
 main = do 
-    forM_ inputFiles1 $ doProblemsOnFile $ doProblem parseInput solve1 1 
-    forM_ inputFiles2 $ doProblemsOnFile $ doProblem parseInput solve2 2
-
-doProblemsOnFile doFunc fileName = do
-    input <- readFile $ "data/"++fileName
-    doFunc input
-
-doProblem :: Show b => Parser a -> (a -> b) -> Int -> String -> IO()
-doProblem parseData solve idx input = do
-    let str = case parse parseData "" input  of
-            Left err -> "Parsing error: " ++ show err
-            Right parsedData -> show idx ++ ": " ++ solution 
-                where solution = show $ solve parsedData
-    putStrLn str
+    run inputFiles parseInput solve1 1
+    run inputFiles parseInput solve2 2
 
 -- PARSING ----------------------------
 
@@ -36,7 +23,6 @@ parseLine = integer `sepBy` char ' ' <* endOfLine
 parseInput = many1 parseLine
 
 -- SOLUTION 1 -------------------------
-
 
 solve1 :: [[Int]] -> Int
 solve1 = sum . map extrapol

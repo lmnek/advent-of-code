@@ -1,26 +1,17 @@
-import Text.Parsec
-import Text.Parsec.String (Parser)
 import Data.List (find)
 import Data.List.Extra (groupOn, sortOn)
 
+import AOCUtils (run)
+import Text.Parsec
+import Text.Parsec.String (Parser)
+
+inputFiles = [ "2_1" , "2_2" ]
 
 main :: IO() 
-main = do
-    fileName <- getLine
-    contents <- readFile $ "data/"++fileName
-    doProblem contents parseInput solve1 1
-    doProblem contents parseInput solve2 2
-    doProblem contents parseInput solve2short 2
-
-doProblem :: Show b => String -> Parser a -> (a -> b) -> Int -> IO()
-doProblem input parseData solve idx = do
-    let str = case parse parseData "" input  of
-            Left err -> "Parsing error: " ++ show err
-            Right parsedData -> show idx ++ ": " ++ solution 
-                where solution = show $ solve parsedData
-    putStrLn str
-
----------------------
+main = do 
+    run inputFiles parseInput solve1 1 
+    run inputFiles parseInput solve2 2 
+    run inputFiles parseInput solve2short 2 
 
 -- Parsing
 
@@ -77,6 +68,7 @@ countInBag cubeType = maybe 0 took $ find ((== cubeType) . cube) bag
 
 -- note: groupOn func = groupBy ((==) `on` func)
 
+-- one-liner solution, point-free yayyy
 solve2short = sum . map (product . (map (maximum . map took)) . (groupOn cube . sortOn cube . concat) . sets)  
 
 solve2 :: [Game] -> Int

@@ -1,21 +1,14 @@
+import AOCUtils (run)
 import Text.Parsec
 import Text.Parsec.String (Parser)
-import Debug.Trace 
+
+inputFiles1 = [ "4_1" , "4_2" ]
+inputFiles2 = [ "4_1b" , "4_2" ]
 
 main :: IO() 
-main = do
-    fileName <- getLine
-    input <- readFile $ "data/"++fileName
-    doProblem input parseInput solve1 1
-    doProblem input parseInput solve2 2
-
-doProblem :: Show b => String -> Parser a -> (a -> b) -> Int -> IO()
-doProblem input parseData solve idx = do
-    let str = case parse parseData "" input  of
-            Left err -> "Parsing error: " ++ show err
-            Right parsedData -> show idx ++ ": " ++ solution 
-                where solution = show $ solve parsedData
-    putStrLn str
+main = do 
+    run inputFiles1 parseInput solve1 1 
+    run inputFiles2 parseInput solve2 2 
 
 -- DATA TYPES / CLASSES --------------
 
