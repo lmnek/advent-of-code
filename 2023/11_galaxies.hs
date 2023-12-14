@@ -38,8 +38,9 @@ prefixSum xss = scanl (\prev xs -> prev + dist xs) 0 xss
 
 distance :: [Int] -> [Int] -> ((Int, Int), (Int, Int)) -> Int
 distance rowD colD ((y1, x1), (y2, x2)) = yDiff + xDiff 
-    where yDiff = abs $ (rowD !! y1) - (rowD !! y2)
-          xDiff = abs $ (colD !! x1) - (colD !! x2)
+    where singleDistance xsD a b = abs $ (xsD !! a) - (xsD !! b)
+          yDiff = singleDistance rowD y1 y2
+          xDiff = singleDistance colD x1 x2
 
 -- UTILS -------------------------
 
