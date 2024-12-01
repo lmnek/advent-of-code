@@ -12,7 +12,6 @@ executable aoc2024
   main-is: Main.hs
   other-modules:
       AOCUtils
-      AOCUtils_1
       Day01
       Paths_aoc2024
   hs-source-dirs:

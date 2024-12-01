@@ -1,7 +1,6 @@
-module Day01 (solve1) where
+module Day01 (main) where
 
-import AOCUtils (run)
-import AOCUtils_1 (runReturn)
+import AOCUtils (runPrint, runReturn)
 import Data.List (nub, sort, transpose)
 import Text.Parsec (digit, endOfLine, many1, spaces)
 import Text.Parsec.String (Parser)
@@ -10,8 +9,8 @@ inputFiles1 = ["1_1a", "1_1b"]
 
 main :: IO ()
 main = do
-    run inputFiles1 parseInput1 solve1 1
-    run inputFiles1 parseInput1 solve2 1
+    runPrint inputFiles1 parseInput1 solve1 1
+    runPrint inputFiles1 parseInput1 solve2 2
 
 -- PARSING ----------------------------
 
