@@ -5,9 +5,10 @@ import AOCUtils (runPrint, runReturn)
 import Data.Either
 import Data.Function
 import Data.List hiding (insert)
-import Data.Map (valid)
+import qualified Data.Map as Map
+import Data.Map.Strict (fromList, valid, (!))
 import Data.Maybe
-import Data.Set as Set hiding (filter)
+import Data.Set as Set hiding (filter, foldr)
 import Text.Parsec
 
 inputFiles1 = ["6_1a", "6_1b"]
@@ -23,6 +24,7 @@ main = do
 type Pos = (Int, Int)
 
 data Dir = U | D | R | L
+    deriving (Eq, Show, Ord)
 
 -- PARSING ----------------------------
 
@@ -94,7 +96,74 @@ rotateDir curDir = case curDir of
 
 fst3 (a, _, _) = a
 
--- Much quicker version than going step by step -> rather jump to closest obstacle,
+-- NOTE: could nicely refactor
+-- data GuardState = GuardState
+--     { pos :: Pos
+--     , dir :: Dir
+--     , visited :: [Pos] -- Tracking visited positions as a list for simplicity
+--     , loopMap :: [(Dir, [Pos])] -- A list of directions and positions
+--     , possibleObs :: [Pos] -- List of positions where a new obstacle could be placed
+--     }
+
+-- NOTE: Very nice efficient idea for part2 but does not work on large input :(
+
+-- >>> runReturn inputFiles1 inputP solve2 2
+-- "2-6_1a: 6 ,  2-6_1b: 446"
+
+-- >>> runReturn [inputFiles1 !! 0] inputP solve2 2
+-- "2-6_1a: 6"
+
+solve2 ((rows, cols), start, obs) = length $ getPossibleObs out
+  where
+    isOut (y, x) = x < 0 || y < 0 || y >= rows || x >= cols
+    step' = step2 isOut $ Set.fromList obs
+    loopMap = Map.fromList $ [(dir, Set.empty) | dir <- [U, D, L, R]]
+    startAcc = (start, U, Set.empty, loopMap, Set.empty)
+    out = until (isOut . fst5) step' startAcc
+
+type StepAcc = (Pos, Dir, Set Pos, Map.Map Dir (Set Pos), Set Pos)
+step2 :: (Pos -> Bool) -> Set Pos -> StepAcc -> StepAcc
+step2 isOut obstacles (pos, dir, visited, loopMap, possibleObs)
+    -- bumped into box -> rotate + save segment into loopMap
+    | isInObstacles newNextPos =
+        let
+            -- saving a segment, where loop could be found in the future
+            moveOposite = flip move $ opositeDir dir
+            getPossUntilBorder pos'
+                | isInObstacles pos' || isOut pos' = []
+                | otherwise = pos' : getPossUntilBorder (moveOposite pos')
+            loopDir = prevDir dir
+            newLoopDirSet = foldr Set.insert (loopMap ! loopDir) (getPossUntilBorder newPos)
+            newLoopMap = Map.insert loopDir newLoopDirSet loopMap
+         in
+            (newPos, rotateDir dir, newVisited, newLoopMap, possibleObs)
+    -- found a loop! ~ place to put new obstruction
+    | newPos `member` (loopMap ! dir) =
+        (newPos, dir, newVisited, loopMap, newNextPos `insert` possibleObs)
+    | otherwise = (newPos, dir, newVisited, loopMap, possibleObs)
+  where
+    newPos = move pos dir
+    newVisited = newPos `insert` visited
+    newNextPos = move newPos dir
+    isInObstacles ps = ps `member` obstacles
+
+opositeDir curDir = case curDir of
+    U -> D
+    R -> L
+    D -> U
+    L -> R
+prevDir curDir = case curDir of
+    U -> L
+    R -> U
+    L -> D
+    D -> R
+
+getPossibleObs (_, _, _, _, obs) = obs
+fst5 (x, _, _, _, _) = x
+
+------------------------------------------------
+
+-- Much quicker part1 version than going step by step -> rather jump to closest obstacle,
 -- but takes too much time and logic to implement ... unfinished
 
 -- todo: add hashset of visited states to accumalator
@@ -123,10 +192,3 @@ movementFuncs curDir = case curDir of
     R -> (fst, snd, (>), (0, -1))
     L -> (fst, snd, (<), (0, 1))
 addT (a, b) (a', b') = (a + a', b + b')
-
--- >>> runReturn inputFiles1 inputP (uncurry solve2) 2
--- "2-5_1a: 123 ,  2-5_1b: 5799"
-
--- solve2 conds = sum . map (midElem . sortUpdate conds) . filter (not . checkUpdate conds)
---
---
