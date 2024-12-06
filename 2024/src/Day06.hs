@@ -2,14 +2,15 @@ module Day06 (main) where
 
 import AOCUtils (runPrint, runReturn)
 
--- import Data.Either (Left, Right)
-
 import Data.Either
-import Data.List
+import Data.Function
+import Data.List hiding (insert)
+import Data.Map (valid)
 import Data.Maybe
+import Data.Set as Set hiding (filter)
 import Text.Parsec
 
-inputFiles1 = ["6_1a"] -- , "6_1b"]
+inputFiles1 = ["6_1a", "6_1b"]
 
 main :: IO ()
 main = do
@@ -29,36 +30,103 @@ getPos = do
     posI <- getPosition
     return (sourceLine posI - 1, sourceColumn posI - 1)
 
+validCharP = oneOf ".#^"
+
 objectP = do
     pos <- getPos
-    c <- oneOf ".#^"
-    return (c, pos)
+    c <- validCharP
+    return $ case c of
+        '#' -> Just $ Left pos
+        '^' -> Just $ Right pos
+        _ -> Nothing
+
+getColCountP = do
+    many validCharP
+    posI <- getPosition
+    endOfLine
+    return $ sourceColumn posI - 1
 
 inputP = do
-    objectsPerLine <- many objectP `endBy1` endOfLine
-    let size = (length objectsPerLine, length $ head objectsPerLine)
-    let allObjects = concat objectsPerLine
-    let obstacles = map snd $ filter ((== '#') . fst) allObjects
-    let guard = snd . head $ filter ((== '^') . fst) allObjects
-    return (size, guard, obstacles)
+    colCount <- lookAhead getColCountP
+    allObjects <- concat <$> (catMaybes <$> many objectP) `endBy1` endOfLine
+    let obstacles = lefts allObjects
+    let guard = head $ rights allObjects
+    rowCount <- fst <$> getPos
+    return ((rowCount, colCount), guard, obstacles)
 
 -- >>> runReturn [inputFiles1 !! 0] inputP parsedOutput 1
--- "1-6_1a: ([[('.',(0,0)),('.',(0,1)),('.',(0,2)),('.',(0,3)),('#',(0,4)),('.',(0,5)),('.',(0,6)),('.',(0,7)),('.',(0,8)),('.',(0,9))],[('.',(1,0)),('.',(1,1)),('.',(1,2)),('.',(1,3)),('.',(1,4)),('.',(1,5)),('.',(1,6)),('.',(1,7)),('.',(1,8)),('#',(1,9))],[('.',(2,0)),('.',(2,1)),('.',(2,2)),('.',(2,3)),('.',(2,4)),('.',(2,5)),('.',(2,6)),('.',(2,7)),('.',(2,8)),('.',(2,9))],[('.',(3,0)),('.',(3,1)),('#',(3,2)),('.',(3,3)),('.',(3,4)),('.',(3,5)),('.',(3,6)),('.',(3,7)),('.',(3,8)),('.',(3,9))],[('.',(4,0)),('.',(4,1)),('.',(4,2)),('.',(4,3)),('.',(4,4)),('.',(4,5)),('.',(4,6)),('#',(4,7)),('.',(4,8)),('.',(4,9))],[('.',(5,0)),('.',(5,1)),('.',(5,2)),('.',(5,3)),('.',(5,4)),('.',(5,5)),('.',(5,6)),('.',(5,7)),('.',(5,8)),('.',(5,9))],[('.',(6,0)),('#',(6,1)),('.',(6,2)),('.',(6,3)),('^',(6,4)),('.',(6,5)),('.',(6,6)),('.',(6,7)),('.',(6,8)),('.',(6,9))],[('.',(7,0)),('.',(7,1)),('.',(7,2)),('.',(7,3)),('.',(7,4)),('.',(7,5)),('.',(7,6)),('.',(7,7)),('#',(7,8)),('.',(7,9))],[('#',(8,0)),('.',(8,1)),('.',(8,2)),('.',(8,3)),('.',(8,4)),('.',(8,5)),('.',(8,6)),('.',(8,7)),('.',(8,8)),('.',(8,9))],[('.',(9,0)),('.',(9,1)),('.',(9,2)),('.',(9,3)),('.',(9,4)),('.',(9,5)),('#',(9,6)),('.',(9,7)),('.',(9,8)),('.',(9,9))]],(10,10),(6,4),[(0,4),(1,9),(3,2),(4,7),(6,1),(7,8),(8,0),(9,6)])"
+-- "1-6_1a: ((10,10),(6,4),[(0,4),(1,9),(3,2),(4,7),(6,1),(7,8),(8,0),(9,6)])"
+
 parsedOutput = id
 
 -- >>> runReturn inputFiles1 inputP solve1 1
--- "1-6_1a: [(0,4),(1,9),(3,2),(4,7),(6,1),(7,8),(8,0),(9,6)]"
+-- "1-6_1a: 42 ,  1-6_1b: 5312"
 
--- solve1 (start, obs) = until
---     where
---         isOut =
+solve1 ((rows, cols), start, obs) = length visited
+  where
+    isOut (y, x) = x < 0 || y < 0 || y >= rows || x >= cols
+    step' = step $ Set.fromList obs
+    startAcc = (start, U, Set.empty)
+    (_, _, visited) = until (isOut . fst3) step' startAcc
 
-nextDir U = R
-nextDir R = D
-nextDir D = L
-nextDir L = U
+step obstacles (pos, dir, visited) =
+    let
+        newPos = move pos dir
+        newDir =
+            if move newPos dir `member` obstacles
+                then rotateDir dir
+                else dir
+     in
+        (newPos, newDir, newPos `insert` visited)
+
+move (y, x) dir = (y + y_inc, x + x_inc)
+  where
+    (y_inc, x_inc) = case dir of
+        U -> (-1, 0)
+        D -> (1, 0)
+        L -> (0, -1)
+        R -> (0, 1)
+rotateDir curDir = case curDir of
+    U -> R
+    R -> D
+    D -> L
+    L -> U
+
+fst3 (a, _, _) = a
+
+-- Much quicker version than going step by step -> rather jump to closest obstacle,
+-- but takes too much time and logic to implement ... unfinished
+
+-- todo: add hashset of visited states to accumalator
+solve1b ((rows, cols), start, obs) = until (not . isOut . fst) (moveToObst obs) (start, U)
+  where
+    isOut (y, x) = x < 0 || y < 0 || y >= rows || x >= cols
+
+-- todo: compute visited states
+moveToObst obs (pos, dir) =
+    let
+        (constAxis, moveAxis, cmp, nextToTarget) = movementFuncs dir
+        relevantObstacles = filter (cmp (moveAxis pos) . moveAxis) $ filter ((==) (constAxis pos) . constAxis) obs
+     in
+        case relevantObstacles of
+            [] -> undefined -- todo: finish this branch till the border
+            _ ->
+                let
+                    closestOb = minimumBy (compare `on` (abs . subtract (moveAxis pos) . moveAxis)) relevantObstacles
+                    newPos = addT closestOb nextToTarget
+                 in
+                    (newPos, rotateDir dir)
+
+movementFuncs curDir = case curDir of
+    U -> (snd, fst, (>), (1, 0))
+    D -> (snd, fst, (<), (-1, 0))
+    R -> (fst, snd, (>), (0, -1))
+    L -> (fst, snd, (<), (0, 1))
+addT (a, b) (a', b') = (a + a', b + b')
 
 -- >>> runReturn inputFiles1 inputP (uncurry solve2) 2
 -- "2-5_1a: 123 ,  2-5_1b: 5799"
 
 -- solve2 conds = sum . map (midElem . sortUpdate conds) . filter (not . checkUpdate conds)
+--
+--
