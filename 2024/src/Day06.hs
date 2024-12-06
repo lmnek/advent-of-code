@@ -1,79 +1,64 @@
 module Day06 (main) where
 
 import AOCUtils (runPrint, runReturn)
+
+-- import Data.Either (Left, Right)
+
+import Data.Either
 import Data.List
+import Data.Maybe
 import Text.Parsec
 
-inputFiles1 = ["6_1a", "6_1b"]
+inputFiles1 = ["6_1a"] -- , "6_1b"]
 
 main :: IO ()
 main = do
-    runPrint inputFiles1 inputP (uncurry solve1) 1
+    runPrint inputFiles1 inputP solve1 1
 
 -- runPrint inputFiles1 inputP solve2 2
 
 -- CLASSES ----------------------------
 
-type Cond = (Int, Int)
+type Pos = (Int, Int)
+
+data Dir = U | D | R | L
 
 -- PARSING ----------------------------
 
-numberP = read <$> many1 digit
+getPos = do
+    posI <- getPosition
+    return (sourceLine posI - 1, sourceColumn posI - 1)
 
-condP = do
-    a <- numberP
-    char '|'
-    b <- numberP
-    endOfLine
-    return (a, b)
-
-updateP = numberP `sepBy1` char ','
+objectP = do
+    pos <- getPos
+    c <- oneOf ".#^"
+    return (c, pos)
 
 inputP = do
-    conds <- many1 condP
-    endOfLine
-    updates <- updateP `endBy1` endOfLine
-    return (conds, updates)
+    objectsPerLine <- many objectP `endBy1` endOfLine
+    let size = (length objectsPerLine, length $ head objectsPerLine)
+    let allObjects = concat objectsPerLine
+    let obstacles = map snd $ filter ((== '#') . fst) allObjects
+    let guard = snd . head $ filter ((== '^') . fst) allObjects
+    return (size, guard, obstacles)
 
--- >>> runReturn inputFiles1 inputP (uncurry solve1) 1
--- "1-5_1a: 143 ,  1-5_1b: 5268"
+-- >>> runReturn [inputFiles1 !! 0] inputP parsedOutput 1
+-- "1-6_1a: ([[('.',(0,0)),('.',(0,1)),('.',(0,2)),('.',(0,3)),('#',(0,4)),('.',(0,5)),('.',(0,6)),('.',(0,7)),('.',(0,8)),('.',(0,9))],[('.',(1,0)),('.',(1,1)),('.',(1,2)),('.',(1,3)),('.',(1,4)),('.',(1,5)),('.',(1,6)),('.',(1,7)),('.',(1,8)),('#',(1,9))],[('.',(2,0)),('.',(2,1)),('.',(2,2)),('.',(2,3)),('.',(2,4)),('.',(2,5)),('.',(2,6)),('.',(2,7)),('.',(2,8)),('.',(2,9))],[('.',(3,0)),('.',(3,1)),('#',(3,2)),('.',(3,3)),('.',(3,4)),('.',(3,5)),('.',(3,6)),('.',(3,7)),('.',(3,8)),('.',(3,9))],[('.',(4,0)),('.',(4,1)),('.',(4,2)),('.',(4,3)),('.',(4,4)),('.',(4,5)),('.',(4,6)),('#',(4,7)),('.',(4,8)),('.',(4,9))],[('.',(5,0)),('.',(5,1)),('.',(5,2)),('.',(5,3)),('.',(5,4)),('.',(5,5)),('.',(5,6)),('.',(5,7)),('.',(5,8)),('.',(5,9))],[('.',(6,0)),('#',(6,1)),('.',(6,2)),('.',(6,3)),('^',(6,4)),('.',(6,5)),('.',(6,6)),('.',(6,7)),('.',(6,8)),('.',(6,9))],[('.',(7,0)),('.',(7,1)),('.',(7,2)),('.',(7,3)),('.',(7,4)),('.',(7,5)),('.',(7,6)),('.',(7,7)),('#',(7,8)),('.',(7,9))],[('#',(8,0)),('.',(8,1)),('.',(8,2)),('.',(8,3)),('.',(8,4)),('.',(8,5)),('.',(8,6)),('.',(8,7)),('.',(8,8)),('.',(8,9))],[('.',(9,0)),('.',(9,1)),('.',(9,2)),('.',(9,3)),('.',(9,4)),('.',(9,5)),('#',(9,6)),('.',(9,7)),('.',(9,8)),('.',(9,9))]],(10,10),(6,4),[(0,4),(1,9),(3,2),(4,7),(6,1),(7,8),(8,0),(9,6)])"
+parsedOutput = id
 
-solve1 :: [Cond] -> [[Int]] -> Int
-solve1 conds = sum . map midElem . filter (checkUpdate conds)
+-- >>> runReturn inputFiles1 inputP solve1 1
+-- "1-6_1a: [(0,4),(1,9),(3,2),(4,7),(6,1),(7,8),(8,0),(9,6)]"
 
-checkUpdate conds update = all (checkCondition (getIndexMap update)) conds
+-- solve1 (start, obs) = until
+--     where
+--         isOut =
 
-checkCondition indexMap (a, b) = case (indexMap !? a, indexMap !? b) of
-    (Just i, Just j) -> i < j
-    _ -> True
-
-midElem xs = xs !! (length xs `div` 2)
-
-getIndexMap update = Data.IntMap.fromList $ zip update [0 ..]
+nextDir U = R
+nextDir R = D
+nextDir D = L
+nextDir L = U
 
 -- >>> runReturn inputFiles1 inputP (uncurry solve2) 2
 -- "2-5_1a: 123 ,  2-5_1b: 5799"
 
-{--
-     I used topological sort; other approaches would include:
-     - sortBy with custom sorting function based on conditions
-     - no need for sorting when only getting mid element!
-        -> just find elem. which has (length/2) of elems before and after ~ from conditions
---}
-
-solve2 :: [Cond] -> [[Int]] -> Int
-solve2 conds = sum . map (midElem . sortUpdate conds) . filter (not . checkUpdate conds)
-
--- NOTE: using fgl library would be simpler than graph
-sortUpdate conds update = map (fst3 . nodeFromVertex) $ topSort graph
-  where
-    activeConds = filter (useCondition (getIndexMap update)) conds
-    outEdges from = map snd $ filter ((== from) . fst) activeConds
-    edgeList = map (\x -> (x, x, outEdges x)) update
-    (graph, nodeFromVertex) = Graph.graphFromEdges' edgeList
-
-useCondition indexMap (a, b) = case (indexMap !? a, indexMap !? b) of
-    (Just _, Just _) -> True
-    _ -> False
-
-fst3 (a, _, _) = a
+-- solve2 conds = sum . map (midElem . sortUpdate conds) . filter (not . checkUpdate conds)
