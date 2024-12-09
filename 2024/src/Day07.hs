@@ -36,6 +36,9 @@ isPossiblyTrue ops acc (res, n : ns)
     | otherwise = any (\op -> isPossiblyTrue ops (op acc n) (res, ns)) ops
 
 -- >>> runReturn inputFiles1 inputP solve2 2
+-- "2-7_1a: 11387 ,  2-7_1b: 189207836795655"
+
+-- NOTE: potential performance improvement -
 
 pipesOp a b = read (show a ++ show b)
 
