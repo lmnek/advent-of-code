@@ -37,7 +37,7 @@ solve1 hss = sum $ map (uniqCount . trailCounts hss 0) $ startIdxs hss
 startIdxs hss = [i | (i, h) <- assocs hss, h == 0]
 
 -- trail ~ gradually going up from 0 to 9
--- trailCounts :: Map -> Int -> MapIndex -> Int
+trailCounts :: Map -> Int -> MapIndex -> [MapIndex]
 trailCounts hss height idx
     | height == 9 = [idx]
     | otherwise = concat [trailCounts hss (height + 1) nextIdx | nextIdx <- nextIdxs]

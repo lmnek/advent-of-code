@@ -6,6 +6,7 @@ dependencies:
   - parsec
   - containers
   - array
+  - extra
 
 executables:
   aoc2024:
