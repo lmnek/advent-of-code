@@ -16,6 +16,7 @@ executable aoc2024
       Day02
       Day03
       Day04
+      Day05
       Paths_aoc2024
   hs-source-dirs:
       src/

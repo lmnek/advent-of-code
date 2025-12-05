@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Eta reduce" #-}
-module Day03 (main) where
+module Day04 (main) where
 
 import AOCUtils (runPrint, runReturn)
 import Debug.Trace
@@ -43,13 +43,16 @@ enumerate = zip [0 ..]
 
 dirs = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
 
+-- much smarter solution instead of 2D grid -> use hashmap of only rolls with values of indices: https://github.com/bhugoVilela/advent-of-code-2025/blob/main/src/Day04.hs
+-- a bit similar to mine but better Haskell data structures: https://github.com/stanosphere/advent-of-code/blob/main/src/2025/Day4.hs
+
 -- SOLUTION 2 -------------------------
 
 -- >>> runReturn inputFiles1 parseInput1 solve2 2
 
 -- perf: tail recursion acc
 -- TODO: need to remove rolls after detected from pss !!!
--- (this is stupidly hard in FP compared to anything else??)
+-- (this is stupidly hard in FP compared to anything else?? with my initial solution in 1 and with 2D list)
 solve2 pss = if res == 0 then 0 else res + solve2 pss
   where
     res = solve1 pss
