@@ -1,8 +1,8 @@
-module AOCUtils (runPrint, runReturn) where
+module AOCUtils (runPrint, runReturn, number) where
 
 import Control.Monad (forM, forM_)
 import Data.List (intercalate)
-import Text.Parsec (parse)
+import Text.Parsec
 import Text.Parsec.String (Parser)
 
 -- TODO: fix not printing
@@ -30,3 +30,8 @@ doProblem parser solve i input fileName =
                 solution = show $ solve parsedData
      in
         id ++ res
+
+-- -- UTILS -----
+
+number :: Parser Int
+number = read <$> many1 digit

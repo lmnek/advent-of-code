@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           aoc2024
+name:           aoc2025
 version:        0.1.0.0
 build-type:     Simple
 
@@ -17,6 +17,7 @@ executable aoc2024
       Day03
       Day04
       Day05
+      Day06
       Paths_aoc2024
   hs-source-dirs:
       src/
